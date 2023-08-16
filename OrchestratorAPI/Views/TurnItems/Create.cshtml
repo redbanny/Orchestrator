@@ -1,0 +1,58 @@
+﻿@model OrchestratorAPI.Models.TurnItem
+
+@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>Create</title>
+</head>
+<body>
+
+<h4>TurnItem</h4>
+<hr />
+<div class="row">
+    <div class="col-md-4">
+        <form asp-action="Create">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <div class="form-group">
+                <label asp-for="TurnItemName" class="control-label"></label>
+                <input asp-for="TurnItemName" class="form-control" />
+                <span asp-validation-for="TurnItemName" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="TurnId" class="control-label"></label>
+                <select asp-for="TurnId" class ="form-control" asp-items="ViewBag.TurnId"></select>
+            </div>
+            <div class="form-group">
+                <label asp-for="Item_Status" class="control-label"></label>
+                <select asp-for="Item_Status" class="form-control"></select>
+                <span asp-validation-for="Item_Status" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Create_Time" class="control-label"></label>
+                <input asp-for="Create_Time" class="form-control" />
+                <span asp-validation-for="Create_Time" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Update_Time" class="control-label"></label>
+                <input asp-for="Update_Time" class="form-control" />
+                <span asp-validation-for="Update_Time" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <input type="submit" value="Create" class="btn btn-primary" />
+            </div>
+        </form>
+    </div>
+</div>
+
+<div>
+    <a asp-action="Index">Back to List</a>
+</div>
+
+</body>
+</html>

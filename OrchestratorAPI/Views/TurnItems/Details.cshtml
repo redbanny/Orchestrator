@@ -1,0 +1,57 @@
+﻿@model OrchestratorAPI.Models.TurnItem
+
+@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>Details</title>
+</head>
+<body>
+
+<div>
+    <h4>TurnItem</h4>
+    <hr />
+    <dl class="row">
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.TurnItemName)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.TurnItemName)
+        </dd>
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.Turn)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.Turn.TurnId)
+        </dd>
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.Item_Status)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.Item_Status)
+        </dd>
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.Create_Time)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.Create_Time)
+        </dd>
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.Update_Time)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.Update_Time)
+        </dd>
+    </dl>
+</div>
+<div>
+    <a asp-action="Edit" asp-route-id="@Model?.TurnItemId">Edit</a> |
+    <a asp-action="Index">Back to List</a>
+</div>
+</body>
+</html>

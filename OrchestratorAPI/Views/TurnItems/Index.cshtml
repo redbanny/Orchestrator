@@ -1,0 +1,67 @@
+﻿@model IEnumerable<OrchestratorAPI.Models.TurnItem>
+
+@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>Index</title>
+</head>
+<body>
+<p>
+    <a asp-action="Create">Create New</a>
+</p>
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.TurnItemName)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Turn)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Item_Status)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Create_Time)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Update_Time)
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+@foreach (var item in Model) {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.TurnItemName)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Turn.TurnId)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Item_Status)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Create_Time)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Update_Time)
+            </td>
+            <td>
+                <a asp-action="Edit" asp-route-id="@item.TurnItemId">Edit</a> |
+                <a asp-action="Details" asp-route-id="@item.TurnItemId">Details</a> |
+                <a asp-action="Delete" asp-route-id="@item.TurnItemId">Delete</a>
+            </td>
+        </tr>
+}
+    </tbody>
+</table>
+</body>
+</html>
