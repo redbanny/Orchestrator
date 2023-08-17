@@ -1,6 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.Query;
 using OrchestratorAPI.Contexts;
 using OrchestratorAPI.Models;
 
@@ -15,12 +14,16 @@ namespace OrchestratorAPI.Controllers
         public TurnController(TurnDbContext context) => db = context;
 
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<Turn>>> GetTurn()=>        
-            //var ff = await db.Turns.Include(X => X.TurnItems)
-            //    /*.ThenInclude(x => x.InputDate)*/.ToListAsync();
-            //var f = ff.FirstOrDefault().TurnItems.FirstOrDefault().DeserialInDict(ff.FirstOrDefault().TurnItems.FirstOrDefault().InputDate);
-             await db.Turns.Include(X=>X.TurnItems).ToListAsync();
-        
+        public async Task<ActionResult<IEnumerable<Turn>>> GetTurn() =>
+             await db.Turns.Include(X => X.TurnItems).ToListAsync();
+
+        [HttpGet("{TurnName}")]
+        public async Task<ActionResult<Turn>> GetTurnByName(string TurnName) =>
+            db.Turns.Include(x => x.TurnItems).FirstOrDefault(x => x.TurnName == TurnName);
+
+        [HttpGet("{id}")]
+        public async Task<ActionResult<Turn>> GetTurnById(int id) =>
+            db.Turns.Include(x => x.TurnItems).FirstOrDefault(x => x.TurnId == id);
 
         [HttpPost]
         public async Task<ActionResult<Turn>> PostTurn(Turn turn)
@@ -33,7 +36,6 @@ namespace OrchestratorAPI.Controllers
             else
                 turn.TurnItems.FirstOrDefault().TurnId = db.Turns.FirstOrDefault(x => x.TurnName == turn.TurnName).TurnId;
             db.TurnItems.AddRange(turn.TurnItems);
-            //db.InputDate.AddRange(turn.TurnItems.FirstOrDefault().InputDate);
             await db.SaveChangesAsync();
             return Ok(turn);
         }

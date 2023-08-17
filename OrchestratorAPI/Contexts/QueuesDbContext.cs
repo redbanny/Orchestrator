@@ -19,11 +19,6 @@ namespace OrchestratorAPI.Contexts
                 .HasMany(t => t.TurnItems)
                 .WithOne(t => t.Turn)
                 .HasForeignKey(t => t.TurnId).IsRequired();
-
-            /*modelBuilder.Entity<TurnItem>()
-                .HasOne(t => t.InputDate)
-                .WithOne(t => t.TurnItem)
-                .HasForeignKey<InputDate>(t => t.TurnItemId).IsRequired();*/
         }
     }
 }
