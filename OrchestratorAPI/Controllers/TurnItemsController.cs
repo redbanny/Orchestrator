@@ -47,7 +47,7 @@ namespace OrchestratorAPI.Controllers
         public async Task<ActionResult<TurnItem>> PatchTurnItemStatus(string TurnName, int id, int status)
         {
             var turnItem = db.TurnItems.Include(x => x.Turn)
-                .Where(x=>x.Turn.TurnName == TurnName)
+                .Where(x => x.Turn.TurnName == TurnName)
                 .FirstOrDefault(x => x.TurnItemId == id);
             if(turnItem == null)
                 return NotFound();
