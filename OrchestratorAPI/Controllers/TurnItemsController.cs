@@ -27,6 +27,15 @@ namespace OrchestratorAPI.Controllers
             return Ok(turnItem);
         }
 
+        [HttpGet("{TurnName}")]
+        public async Task<ActionResult<TurnItem>> GetTurnItems(string TurnName)
+        {
+            var turnItem = await db.TurnItems.Where(x => x.Turn.TurnName == TurnName).ToListAsync();
+            if (turnItem == null)
+                return NotFound();
+            return Ok(turnItem);
+        }
+
 
         [HttpPost]
         public async Task<ActionResult<TurnItem>> PostTurnItem(TurnItem turnItem)

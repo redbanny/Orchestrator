@@ -3,7 +3,37 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
-             x:Class="Orchestrator.Views.MainGrid" 
-			 Background="DarkBlue">
-  Welcome to Avalonia!
+             x:Class="Orchestrator.Views.MainGrid">
+	<Grid Name="grid">
+		<Grid.RowDefinitions>
+			<RowDefinition Height="50"/>
+			<RowDefinition Height="350"/>
+			<RowDefinition Height="50"/>
+		</Grid.RowDefinitions>
+		<Grid.ColumnDefinitions>
+			<ColumnDefinition Width="100"/>
+			<ColumnDefinition Width="700"/>
+			<ColumnDefinition Width="100"/>
+		</Grid.ColumnDefinitions>
+
+		<Button Name="menu_button" 
+			Grid.Row="0" Grid.Column="0" HorizontalAlignment="Center"				
+				VerticalAlignment="Center" CornerRadius="10" Width="50" Click="Menu_button_Click">
+			<TextBlock Text="X" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+		</Button>
+		<Border BorderBrush="DimGray" BorderThickness="1 0" Grid.Column="0" Grid.RowSpan="2"/>
+		
+		<StackPanel Grid.Column="0" Grid.Row="1"
+					HorizontalAlignment="Center" VerticalAlignment="Center">
+			
+			<TextBlock Text="first" Margin="0 25"/>
+			<TextBlock Text="first" Margin="0 25"/>
+			<TextBlock Text="first" Margin="0 25"/>
+			<TextBlock Text="first" Margin="0 25"/>
+			<TextBlock Text="first" Margin="0 25"/>
+		</StackPanel>
+		<Border Background="Transparent" Grid.ColumnSpan="3" Grid.Row="2" BorderBrush="DimGray" BorderThickness="1"/>
+		<TextBlock Text="Это футтер" Grid.ColumnSpan="3" Grid.Row="3"
+				   HorizontalAlignment="Center" VerticalAlignment="Center"/>
+	</Grid>
 </UserControl>
