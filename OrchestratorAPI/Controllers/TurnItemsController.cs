@@ -21,7 +21,8 @@ namespace OrchestratorAPI.Controllers
         [HttpGet("{TurnName}/{status}")]
         public async Task<ActionResult<TurnItem>> GetTurnItemByStatus(string TurnName, int status)
         {
-            var turnItem = await db.TurnItems.Where(x=>x.Turn.TurnName == TurnName).FirstOrDefaultAsync(x=>x.Item_Status == (TurnItem.Status)status);
+            var turnItem = await db.TurnItems.Where(x=>x.Turn.TurnName == TurnName)
+                .FirstOrDefaultAsync(x=>x.Item_Status == (TurnItem.Status)status);
             if (turnItem == null)
                 return NotFound();
             return Ok(turnItem);
