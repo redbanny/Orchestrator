@@ -21,7 +21,7 @@ namespace OrchestratorAPI.Models
         public Turn? Turn { get; set; }
         public Status Item_Status { get; set;}
         public DateTime Create_Time { get; set;}
-        public DateTime Update_Time { get; set;}
+        public DateTime? Update_Time { get; set;}
         public string InputDate { get; set; }
 
         public Dictionary<string, object> DeserialInDict(string value)
