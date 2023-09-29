@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using OrchestratorAPI.Contexts;
+using OrchestratorAPI.JWT.Filters;
 using OrchestratorAPI.Models;
 
 namespace OrchestratorAPI.Controllers
@@ -14,15 +15,18 @@ namespace OrchestratorAPI.Controllers
         public TurnController(TurnDbContext context) => db = context;
 
         [HttpGet]
+        [JwtAuthenticationFilter]
         public async Task<ActionResult<IEnumerable<Turn>>> GetTurn() =>
              await db.Turns.Include(X => X.TurnItems).ToListAsync();
 
         [HttpGet("{TurnName}")]
+        [JwtAuthenticationFilter]
         public async Task<ActionResult<IEnumerable<Turn>>> GetTurnByName(string TurnName) =>
             await db.Turns.Where(x => x.TurnName == TurnName).Include(x => x.TurnItems).ToListAsync();
 
 
         [HttpPost]
+        [JwtAuthenticationFilter]
         public async Task<ActionResult<Turn>> PostTurn(Turn turn)
         {
             if (turn == null)

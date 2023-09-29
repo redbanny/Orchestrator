@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using OrchestratorAPI.Contexts;
+using OrchestratorAPI.JWT.Filters;
 using OrchestratorAPI.Models;
 
 namespace OrchestratorAPI.Controllers
@@ -15,10 +16,12 @@ namespace OrchestratorAPI.Controllers
             db = context;
 
         [HttpGet]
+        [JwtAuthenticationFilter]
         public async Task<ActionResult<IEnumerable<TurnItem>>> GetTurnItems() =>
            await db.TurnItems.Include(x => x.Turn).ToListAsync();
 
         [HttpGet("{TurnName}/{status}")]
+        [JwtAuthenticationFilter]
         public async Task<ActionResult<TurnItem>> GetTurnItemByStatus(string TurnName, int status)
         {
             var turnItem = await db.TurnItems.Where(x=>x.Turn.TurnName == TurnName)
@@ -29,6 +32,7 @@ namespace OrchestratorAPI.Controllers
         }
 
         [HttpGet("{TurnName}")]
+        [JwtAuthenticationFilter]
         public async Task<ActionResult<TurnItem>> GetTurnItems(string TurnName)
         {
             var turnItem = await db.TurnItems.Where(x => x.Turn.TurnName == TurnName).ToListAsync();
@@ -38,6 +42,7 @@ namespace OrchestratorAPI.Controllers
         }        
 
         [HttpPost]
+        [JwtAuthenticationFilter]
         public async Task<ActionResult<TurnItem>> PostTurnItem(TurnItem turnItem)
         {
             if (turnItem == null)
@@ -53,6 +58,7 @@ namespace OrchestratorAPI.Controllers
         }
 
         [HttpPatch("{TurnName}/{id}/{status}")]
+        [JwtAuthenticationFilter]
         public async Task<ActionResult<TurnItem>> PatchTurnItemStatus(string TurnName, int id, int status)
         {
             var turnItem = db.TurnItems.Include(x => x.Turn)
