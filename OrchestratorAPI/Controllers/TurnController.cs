@@ -21,9 +21,6 @@ namespace OrchestratorAPI.Controllers
         public async Task<ActionResult<IEnumerable<Turn>>> GetTurnByName(string TurnName) =>
             await db.Turns.Where(x => x.TurnName == TurnName).Include(x => x.TurnItems).ToListAsync();
 
-        //[HttpGet("{id}")]
-        //public async Task<ActionResult<Turn>> GetTurnById(int id) =>
-        //    db.Turns.Include(x => x.TurnItems).FirstOrDefault(x => x.TurnId == id);
 
         [HttpPost]
         public async Task<ActionResult<Turn>> PostTurn(Turn turn)

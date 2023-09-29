@@ -11,7 +11,6 @@ namespace OrchestratorAPI.Contexts
 
         public DbSet<Turn> Turns { get; set; }
         public DbSet<TurnItem> TurnItems { get; set; }
-        public DbSet<InputDate> InputDate { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
