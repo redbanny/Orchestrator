@@ -19,17 +19,14 @@ namespace OrchestratorAPI.Controllers
         public JwtController(JwtSettings settings) => _settings = settings;
 
         [HttpPost("/token")]
-        public IActionResult Token(/*string username, string password*/User user)
+        public IActionResult Token(User user)
         {
             if(!user.Login.Equals("bobot") && !user.Password.Equals("527716"))
                 return BadRequest(new { errorText = "Invalid username or password." });
-            /*if (!username.Equals("bobot") || !password.Equals("527716"))
-            {
-                return BadRequest(new { errorText = "Invalid username or password." });
-            }*/
+           
             var response = JwtGenerator.GenerateJWT(_settings.SecretKey, _settings.Subject, _settings.Issuer);
 
-            return Json(response);
+            return Ok(response);
         }
     }
 }
