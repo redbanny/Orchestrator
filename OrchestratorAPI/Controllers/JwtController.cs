@@ -15,8 +15,8 @@ namespace OrchestratorAPI.Controllers
     [ApiController]
     public class JwtController : Controller
     {
-        DataHttpService _service;
-        public JwtController(DataHttpService service) => _service = service;
+        JwtSettings _settings;
+        public JwtController(JwtSettings settings) => _settings = settings;
 
         [HttpPost("/token")]
         public IActionResult Token(User user)
@@ -24,9 +24,9 @@ namespace OrchestratorAPI.Controllers
             if (!user.Login.Equals("bobot") && !user.Password.Equals("527716"))
                 return BadRequest(new { errorText = "Invalid username or password." });
 
-            //var response = JwtGenerator.GenerateJWT(_service);
+            var response = JwtGenerator.GenerateJWT(_settings.SecretKey, _settings.Subject, _settings.Issuer);
 
-            return Ok("");
+            return Ok(response);
         }
     }
 }
