@@ -1,6 +1,7 @@
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authentication.OAuth;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
 using OrchestratorAPI.Contexts;
@@ -22,7 +23,7 @@ var section = builder.Configuration.GetSection("JwtSettings");
 var jwtSettings = section.Get<JwtSettings>();
 
 builder.Services.AddSingleton(jwtSettings);
-
+JwtGenerator.GenerateJWT(jwtSettings.SecretKey, jwtSettings.Subject, jwtSettings.Issuer);
 
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();

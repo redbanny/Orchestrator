@@ -21,9 +21,9 @@ namespace OrchestratorAPI.Controllers
         [HttpPost("/token")]
         public IActionResult Token(User user)
         {
-            if(!user.Login.Equals("bobot") && !user.Password.Equals("527716"))
+            if (!user.Login.Equals("bobot") && !user.Password.Equals("527716"))
                 return BadRequest(new { errorText = "Invalid username or password." });
-           
+
             var response = JwtGenerator.GenerateJWT(_settings.SecretKey, _settings.Subject, _settings.Issuer);
 
             return Ok(response);

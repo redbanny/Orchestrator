@@ -35,7 +35,7 @@ namespace OrchestratorAPI.Controllers
         [JwtAuthenticationFilter]
         public async Task<ActionResult<TurnItem>> GetTurnItems(string TurnName)
         {
-            var turnItem = await db.TurnItems.Where(x => x.Turn.TurnName == TurnName).ToListAsync();
+            var turnItem = await db.TurnItems.Include(x => x.Turn).Where(x => x.Turn.TurnName == TurnName).ToListAsync();
             if (turnItem == null)
                 return NotFound();
             return Ok(turnItem);
