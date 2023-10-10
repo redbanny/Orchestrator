@@ -12,16 +12,23 @@ namespace OrchestratorAPI.Controllers
     public class TurnController : Controller
     {
         private readonly TurnDbContext _db;
+        private ILogger<TurnController> _logger;
 
-        public TurnController(TurnDbContext context)
+        public TurnController(TurnDbContext context, ILogger<TurnController> logger)
         {
             _db = context;
+            _logger = logger;
         }
 
         [HttpGet]
         [JwtAuthenticationFilter]
-        public async Task<ActionResult<IEnumerable<Turn>>> GetTurn() =>
-             await _db.Turns.Include(X => X.TurnItems).ToListAsync();
+        public async Task<ActionResult<IEnumerable<Turn>>> GetTurn()
+        {
+            _logger.LogInformation("Получение списка очередей");
+            var turns = await _db.Turns.Include(X => X.TurnItems).ToListAsync();
+            _logger.LogInformation($"Количество очередей: {turns.Count}");
+            return Ok(turns);
+        }
 
         [HttpGet("{TurnName}")]
         [JwtAuthenticationFilter]

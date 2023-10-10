@@ -11,9 +11,13 @@ namespace OrchestratorAPI.Controllers
     public class TurnItemsController : Controller
     {
         private readonly TurnDbContext db;
+        private ILogger<TurnItemsController> _logger;
 
-        public TurnItemsController(TurnDbContext context) =>
+        public TurnItemsController(TurnDbContext context, ILogger<TurnItemsController> logger)
+        {
             db = context;
+            _logger = logger;
+        }
 
         [HttpGet]
         [JwtAuthenticationFilter]
@@ -35,9 +39,14 @@ namespace OrchestratorAPI.Controllers
         [JwtAuthenticationFilter]
         public async Task<ActionResult<TurnItem>> GetTurnItems(string TurnName)
         {
+            _logger.LogInformation("Получение элементов очереди");
             var turnItem = await db.TurnItems.Include(x => x.Turn).Where(x => x.Turn.TurnName == TurnName).ToListAsync();
             if (turnItem == null)
+            {
+                _logger.LogWarning("В очереди нет элементов");
                 return NotFound();
+            }
+            _logger.LogInformation($"Записей: {turnItem.Count}");
             return Ok(turnItem);
         }        
 
