@@ -1,44 +1,25 @@
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Options;
 using OrchestratorAPI.Contexts;
 using OrchestratorAPI.JWT.Filters;
-using OrchestratorAPI.JWT.Http;
-using System.Net.Http.Headers;
 using System.Text.Json.Serialization;
 using NLog;
 using NLog.Web;
-using System;
 
-string connectionString = @"Server=(localdb)\MSSQLLocalDB;Database=QueuesTable;Integrated Security=true";
+
 var logger = NLogBuilder.ConfigureNLog("Nlog.config").GetCurrentClassLogger();
 logger.Info("Запуск сервиса согласования");
 try
 {
     var builder = WebApplication.CreateBuilder(args);
+    builder.Configuration.AddJsonFile("appsettings.json");
     builder.Logging.ClearProviders();
-    builder.Host.UseNLog();
-
-    builder.Configuration.AddJsonFile("appsettings.json", optional: false, reloadOnChange: true).Build();
+    builder.Host.UseNLog();   
 
     #region Add services to the container.
-    builder.Services.AddDbContext<TurnDbContext>(opt => opt.UseSqlServer(connectionString));
+    builder.Services.AddDbContext<TurnDbContext>(opt => opt.UseSqlServer(builder.Configuration.GetSection("DefaultConnection").Value));
     builder.Services.AddControllers().AddJsonOptions(x =>
         x.JsonSerializerOptions.ReferenceHandler = ReferenceHandler.IgnoreCycles);
-    var section = builder.Configuration.GetSection("JwtSettings");
-    builder.Services.AddSingleton(section.Get<JwtSettings>());
-    builder.Services.AddScoped<DataServiceSettings>();
-    builder.Services.AddHttpClient<DataHttpService>((service, client) =>
-    {
-        var setting = service.GetRequiredService<IOptions<DataServiceSettings>>().Value;
-        var jwtToken = JwtGenerator.GenerateJWT(setting.SecretKey, setting.Subject, setting.Issuer);
-
-        client.DefaultRequestHeaders.Accept.Clear();
-        client.DefaultRequestHeaders.UserAgent.Clear();
-        client.BaseAddress = new Uri(setting.Url);
-        client.DefaultRequestHeaders.Add("Accept", "application/vnd.github.v3+json");
-        client.DefaultRequestHeaders.Add("User-Agent", "HttpClientFactory-Sample");
-        client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue(setting.AuthScheme, jwtToken);
-    });
+    builder.Services.Configure<JwtSettings>(builder.Configuration.GetSection(nameof(JwtSettings)));
     #endregion
 
     builder.Services.AddEndpointsApiExplorer();
