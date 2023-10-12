@@ -5,7 +5,6 @@ using System.Text.Json.Serialization;
 using NLog;
 using NLog.Web;
 
-
 var logger = NLogBuilder.ConfigureNLog("Nlog.config").GetCurrentClassLogger();
 logger.Info("Запуск сервиса согласования");
 try
@@ -39,7 +38,6 @@ try
     app.UseAuthorization();
 
     app.MapControllers();
-
     app.Run();
 }catch(Exception ex)
 {

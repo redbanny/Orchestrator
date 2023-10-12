@@ -1,5 +1,4 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.Query;
 using OrchestratorAPI.Models;
 
 namespace OrchestratorAPI.Contexts
@@ -11,13 +10,5 @@ namespace OrchestratorAPI.Contexts
 
         public DbSet<Turn> Turns { get; set; }
         public DbSet<TurnItem> TurnItems { get; set; }
-
-        protected override void OnModelCreating(ModelBuilder modelBuilder)
-        {
-            modelBuilder.Entity<Turn>()
-                .HasMany(t => t.TurnItems)
-                .WithOne(t => t.Turn)
-                .HasForeignKey(t => t.TurnId).IsRequired();
-        }
     }
 }
