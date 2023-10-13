@@ -51,5 +51,15 @@ namespace OrchestratorAPI.Controllers
             await _db.SaveChangesAsync();
             return Ok(turn);
         }
+
+        [HttpDelete("{TurnName}")]
+        [JwtAuthenticationFilter]
+        public async Task<ActionResult<Turn>> DeleteTurn(string turnName)
+        {
+            var turn = _db.Turns.FirstOrDefault(turn => turn.TurnName == turnName);
+            if(turn == null) return BadRequest();
+            _db.Turns.Remove(turn);
+            return Ok();
+        }
     }
 }
