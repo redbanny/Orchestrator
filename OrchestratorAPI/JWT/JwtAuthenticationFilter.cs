@@ -28,6 +28,9 @@ namespace OrchestratorAPI.JWT.Filters
             {
                 try
                 {
+                    _logger.LogInformation($"Данные авторизации: Issuer = {_jwtSettings.Issuer},\n " +
+                        $"Subject = {_jwtSettings.Subject},\n SecretKey = {_jwtSettings.SecretKey}");
+
                     if (_jwtSettings is null)
                         throw new InvalidOperationException("Не заданы параметры JWT токена");
 
