@@ -21,17 +21,24 @@ namespace OrchestratorAPI.Controllers
 
         [HttpGet]
         [JwtAuthenticationFilter]
-        public async Task<ActionResult<IEnumerable<TurnItem>>> GetTurnItems() =>
-           await db.TurnItems.Include(x => x.Turn).ToListAsync();
+        public async Task<ActionResult<IEnumerable<TurnItem>>> GetTurnItems()
+        {
+            _logger.LogInformation("Получение списка элементов в очередях");
+            return await db.TurnItems.Include(x => x.Turn).ToListAsync();
+        }
 
         [HttpGet("{TurnName}/{status}")]
         [JwtAuthenticationFilter]
         public async Task<ActionResult<TurnItem>> GetTurnItemByStatus(string TurnName, int status)
         {
+            _logger.LogInformation($"Получение элемента в очереди со статусом {(TurnItem.Status)status}");
             var turnItem = await db.TurnItems.Where(x=>x.Turn.TurnName == TurnName)
                 .FirstOrDefaultAsync(x=>x.Item_Status == (TurnItem.Status)status);
             if (turnItem == null)
+            {
+                _logger.LogWarning($"Элементов со статусом {(TurnItem.Status)status} в очереди не найдено");
                 return NotFound();
+            }
             return Ok(turnItem);
         }
 
@@ -39,7 +46,7 @@ namespace OrchestratorAPI.Controllers
         [JwtAuthenticationFilter]
         public async Task<ActionResult<TurnItem>> GetTurnItems(string TurnName)
         {
-            _logger.LogInformation("Получение элементов очереди");
+            _logger.LogInformation($"Получение элементов очереди {TurnName}");
             var turnItem = await db.TurnItems.Include(x => x.Turn).Where(x => x.Turn.TurnName == TurnName).ToListAsync();
             if (turnItem == null)
             {
@@ -54,6 +61,7 @@ namespace OrchestratorAPI.Controllers
         [JwtAuthenticationFilter]
         public async Task<ActionResult<TurnItem>> PostTurnItem(TurnItem turnItem)
         {
+            _logger.LogInformation($"Добавление элемента в очередь {turnItem.Turn?.TurnName}");
             if (turnItem == null)
                 return BadRequest();
 
@@ -70,6 +78,7 @@ namespace OrchestratorAPI.Controllers
         [JwtAuthenticationFilter]
         public async Task<ActionResult<TurnItem>> PatchTurnItemStatus(string TurnName, int id, int status)
         {
+            _logger.LogInformation($"Смена статуса элемента очереди");
             var turnItem = db.TurnItems.Include(x => x.Turn)
                 .Where(x => x.Turn.TurnName == TurnName)
                 .FirstOrDefault(x => x.TurnItemId == id);

@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Filters;
+using Microsoft.Extensions.Logging;
 using Microsoft.IdentityModel.Tokens;
 using System.IdentityModel.Tokens.Jwt;
 using System.Text;
@@ -35,13 +36,14 @@ namespace OrchestratorAPI.JWT.Filters
                         throw new InvalidOperationException("Не заданы параметры JWT токена");
 
                     var token = context.HttpContext.Request.Headers["Authorization"].FirstOrDefault()?.Split(" ").Last();
-
+                   
                     if (token == null)
+                    {
+                        _logger.LogWarning("Токен пустой");
                         throw new SecurityTokenException();
-
+                    }
                     var tokenHandler = new JwtSecurityTokenHandler();
                     var key = Encoding.ASCII.GetBytes(_jwtSettings.SecretKey);
-
                     tokenHandler.ValidateToken(token, new Microsoft.IdentityModel.Tokens.TokenValidationParameters
                     {
                         ValidIssuer = _jwtSettings.Issuer,
@@ -51,7 +53,6 @@ namespace OrchestratorAPI.JWT.Filters
                         ValidateIssuer = false,
                         ClockSkew = TimeSpan.FromMinutes(15)
                     }, out var validatedToken);
-
                     var jwtToken = (JwtSecurityToken)validatedToken;
                     var subject = jwtToken.Subject;
                     var problemDetails = new List<ProblemDetails>();
@@ -63,10 +64,11 @@ namespace OrchestratorAPI.JWT.Filters
                             Title = "Unauthorized",
                             Type = "https://tools.ietf.org/html/rfc7235#section-3.1"
                         });
-
                     var expiresTimeStamp = long.Parse(jwtToken.Claims.FirstOrDefault(p => p.Type == "exp")?.Value);
                     var expirationTime = DateTimeOffset.FromUnixTimeSeconds(expiresTimeStamp).DateTime.ToLocalTime();
                     if ((expirationTime - DateTime.Now).Minutes > 15)
+                    {
+                        _logger.LogWarning(expirationTime.ToString());
                         problemDetails.Add(new()
                         {
                             Status = StatusCodes.Status401Unauthorized,
@@ -74,10 +76,12 @@ namespace OrchestratorAPI.JWT.Filters
                             Title = "Unauthorized",
                             Type = "https://tools.ietf.org/html/rfc7235#section-3.1"
                         });
+                    }
                     var issuer = validatedToken.Issuer;
                     if (problemDetails.Any())
                     {
                         _logger.LogInformation($"Неудачная попытка входа на сервер в {DateTime.Now} с параметрами Issuer={issuer}, Subject={subject}");
+                        _logger.LogWarning(problemDetails.FirstOrDefault()?.Detail);
                         context.Result = new UnauthorizedObjectResult(problemDetails);
                     }
 
